@@ -1,0 +1,1 @@
+export const NO_CONTENT_STATUS_CODE = 204;
