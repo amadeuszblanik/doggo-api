@@ -15,6 +15,13 @@ const bootstrap = async () => {
   const app = await NestFactory.create(AppModule);
   app.useGlobalInterceptors(new PasswordProtectionInterceptor());
   app.setGlobalPrefix('api');
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Content-Language',
+    exposedHeaders: 'Authorization',
+    credentials: true,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Doggo API')

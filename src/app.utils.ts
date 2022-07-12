@@ -1,4 +1,4 @@
-import { HttpStatus, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, HttpStatus, ValidationError, ValidationPipe } from '@nestjs/common';
 
 const PASSWORD_RULE = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
 
@@ -6,6 +6,12 @@ const PASSWORD_RULE_MESSAGE = 'Password should have 1 upper case, lowcase letter
 
 const VALIDATION_PIPE = new ValidationPipe({
   errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+  exceptionFactory: (errors: ValidationError[]) => {
+    const errorsDetails = errors.map(({ constraints }) => constraints);
+    const message = errorsDetails.map((errorsDetail) => Object.values(errorsDetail).join(', ')).join(', ');
+
+    return new BadRequestException(message);
+  },
 });
 
 export const REGEX = {
