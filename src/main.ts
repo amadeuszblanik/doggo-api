@@ -28,8 +28,11 @@ const bootstrap = async () => {
     .setDescription('Open version of Doggo API')
     .setVersion('INDEV')
     .setBasePath('api')
-    .addTag('auth')
-    .addTag('pets')
+    .addTag('auth', 'Authentication and profile management')
+    .addTag('pets', 'Pet: All endpoints')
+    .addTag('pets-management', 'Pet: Management')
+    .addTag('pets-weight', 'Pet: Weight')
+    .addTag('pets-vaccination', 'Pet: Vaccination')
     .addBearerAuth()
     .build();
 

@@ -24,6 +24,7 @@ export class PetController {
     private vaccinationService: VaccinationService,
   ) {}
 
+  @ApiTags('pets-management')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Post('add')
@@ -31,6 +32,7 @@ export class PetController {
     return this.petService.createNew(body, req.user);
   }
 
+  @ApiTags('pets-management')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get('my')
@@ -40,6 +42,7 @@ export class PetController {
     return this.petService.getAllByUserId(req.user.userid, unit);
   }
 
+  @ApiTags('pets-management')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get(':id')
@@ -49,6 +52,7 @@ export class PetController {
     return this.petService.getByPetId(id, unit, req.user.userid);
   }
 
+  @ApiTags('pets-management')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @HttpCode(NO_CONTENT_STATUS_CODE)
@@ -88,7 +92,7 @@ export class PetController {
     return this.petWeightService.deleteById(weightId, petId);
   }
 
-  @ApiTags('pets-vaccine')
+  @ApiTags('pets-vaccination')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get(':id/vaccine')
@@ -96,7 +100,7 @@ export class PetController {
     return this.vaccinationService.findByPetId(id);
   }
 
-  @ApiTags('pets-vaccine')
+  @ApiTags('pets-vaccination')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Post(':id/vaccine')
@@ -108,7 +112,7 @@ export class PetController {
     return this.vaccinationService.addNewVaccination(req.user.userid, petId, body);
   }
 
-  @ApiTags('pets-vaccine')
+  @ApiTags('pets-vaccination')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @HttpCode(NO_CONTENT_STATUS_CODE)
