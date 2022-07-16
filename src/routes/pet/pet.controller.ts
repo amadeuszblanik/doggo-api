@@ -10,11 +10,18 @@ import { PetInviteDto } from '../../dto/pet-invite.dto';
 import { PetWeightService } from '../../pet-weight/pet-weight.service';
 import { PetWeightCreateDto } from '../../dto/pet-weight-create.dto';
 import { UserService } from '../../user/user.service';
+import { VaccinationService } from '../../vaccination/vaccination.service';
+import { VaccinationCreateDto } from '../../dto/vaccination-create.dto';
 
 @ApiTags('pets')
 @Controller('pets')
 export class PetController {
-  constructor(private petService: PetService, private userService: UserService, private petWeightService: PetWeightService) {}
+  constructor(
+    private petService: PetService,
+    private userService: UserService,
+    private petWeightService: PetWeightService,
+    private vaccinationService: VaccinationService,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
@@ -41,6 +48,7 @@ export class PetController {
     return this.petService.getByPetId(id, unit, req.user.userid);
   }
 
+  @ApiTags('pets-weight')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get(':id/weight')
@@ -50,6 +58,7 @@ export class PetController {
     return this.petWeightService.getAllByPetId(id, unit);
   }
 
+  @ApiTags('pets-weight')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Post(':id/weight')
@@ -59,6 +68,26 @@ export class PetController {
     @Request() req: { user: JwtPayload },
   ) {
     return this.petWeightService.createNew(id, body, req.user.userid);
+  }
+
+  @ApiTags('pets-vaccine')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Get(':id/vaccine')
+  async getVaccineById(@Param('id') id: string) {
+    return this.vaccinationService.findByPetId(id);
+  }
+
+  @ApiTags('pets-vaccine')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Post(':id/vaccine')
+  async postVaccineById(
+    @Param('id') petId: string,
+    @Body(SETTINGS.VALIDATION_PIPE) body: VaccinationCreateDto,
+    @Request() req: { user: JwtPayload },
+  ) {
+    return this.vaccinationService.addNewVaccination(req.user.userid, petId, body);
   }
 
   @UseGuards(JwtAuthGuard)

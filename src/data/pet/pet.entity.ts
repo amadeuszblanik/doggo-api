@@ -1,4 +1,5 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
 import { PetKind } from '../../types/pet-kind.types';
 import { PetUsers } from '../petUsers/petUsers.entity';
 import { PetWeight } from '../petWeight/petWeight.entity';
@@ -30,9 +31,11 @@ export class Pet extends BaseEntity {
   @Column({ default: true })
   isActive: boolean;
 
+  @Exclude()
   @OneToMany(() => PetUsers, (petUsers) => petUsers.pet)
   petUsers: PetUsers[];
 
+  @Exclude()
   @OneToMany(() => PetWeight, (petWeight) => petWeight.pet)
   weight: PetWeight[];
 

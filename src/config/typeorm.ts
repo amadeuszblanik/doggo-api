@@ -4,6 +4,7 @@ import { User } from '../data/user/user.entity';
 import { Pet } from '../data/pet/pet.entity';
 import { PetUsers } from '../data/petUsers/petUsers.entity';
 import { PetWeight } from '../data/petWeight/petWeight.entity';
+import { Vaccination } from '../data/vaccination/vaccination.entity';
 
 export const typeOrmConfig: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],
@@ -14,7 +15,7 @@ export const typeOrmConfig: TypeOrmModuleAsyncOptions = {
     username: configService.get<string>('DATABASE_USER'),
     password: configService.get<string>('DATABASE_PASS'),
     database: configService.get<string>('DATABASE_NAME'),
-    entities: [User, Pet, PetUsers, PetWeight],
+    entities: [User, Pet, PetUsers, PetWeight, Vaccination],
     synchronize: true,
   }),
   inject: [ConfigService],
