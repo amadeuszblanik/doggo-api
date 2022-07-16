@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { JwtPayload } from '../../types/jwt-payload.types';
@@ -46,6 +46,13 @@ export class PetController {
     const unit = await this.userService.getWeightUnitById(req.user.userid);
 
     return this.petService.getByPetId(id, unit, req.user.userid);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Delete(':id')
+  async deletePet(@Param('id') id: string, @Request() req: { user: JwtPayload }) {
+    return this.petService.removePet(id, req.user.userid);
   }
 
   @ApiTags('pets-weight')

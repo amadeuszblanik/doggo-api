@@ -49,7 +49,7 @@ export class PetDbService {
       },
     });
 
-    return allPets.filter(({ petUsers }) => petUsers.some(({ user: { id } }) => id === userId));
+    return allPets.filter(({ petUsers }) => petUsers.some(({ user: { id } }) => id === userId)).filter(({ isActive }) => isActive);
   }
 
   async remove(id: string): Promise<void> {

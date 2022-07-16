@@ -26,6 +26,14 @@ export class PetService {
     return pet;
   }
 
+  async removePet(petId: string, userId: string): Promise<Pet> {
+    const pet = await this.petDbService.findById(petId, userId);
+
+    pet.isActive = false;
+
+    return pet.save();
+  }
+
   async getAllByUserId(userId: string, unit: WeightUnits) {
     const petsOfUser = await this.petDbService.findByUserId(userId);
 
