@@ -91,8 +91,14 @@ export class UsersDbService {
     return this.usersRepository.find();
   }
 
-  findById(id: string): Promise<User> {
-    return this.usersRepository.findOneBy({ id });
+  async findById(id: string): Promise<User> {
+    const user = await this.usersRepository.findOne({ where: { id } });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
   }
 
   findByEmail(email: string): Promise<User> {
@@ -115,7 +121,15 @@ export class UsersDbService {
     return;
   }
 
-  async remove(id: string): Promise<void> {
-    await this.usersRepository.delete(id);
+  async remove(id: string): Promise<User> {
+    const user = await this.usersRepository.findOne({ where: { id } });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    user.isActive = false;
+
+    return await user.save();
   }
 }

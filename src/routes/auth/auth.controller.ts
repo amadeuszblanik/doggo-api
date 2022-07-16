@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Post, Put, Query, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Post, Put, Query, Request, UseGuards } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { User } from '../../data/user/user.entity';
 import { UserService } from '../../user/user.service';
@@ -56,6 +56,14 @@ export class AuthController {
   @ApiBadRequestResponse({ description: 'Something went wrong. Try again!' })
   putProfile(@Request() req: { user: JwtPayload }, @Body() body: UserUpdateSettingsDto) {
     return this.userService.updateProfile(req.user.userid, body);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Delete('deactivate-user')
+  @ApiBadRequestResponse({ description: 'Something went wrong. Try again!' })
+  deleteDeactivateUser(@Request() req: { user: JwtPayload }) {
+    return this.userService.removeUser(req.user.userid);
   }
 
   @UseGuards(JwtAuthGuard)

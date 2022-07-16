@@ -105,6 +105,15 @@ export class UserService {
     return this.usersDbService.resetPassword(email, body.password);
   }
 
+  async removeUser(userId: string): Promise<MessageResponse> {
+    await this.usersDbService.remove(userId);
+
+    return {
+      success: true,
+      message: 'Your account was successfully disabled. If you would not change your mind it might be fully removed in future.',
+    };
+  }
+
   sendUserEmailConfirmation(user: User) {
     try {
       const payload: UserEmailVerificationPayload = { email: user.email };
