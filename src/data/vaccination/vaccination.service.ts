@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { isEmpty } from 'bme-utils';
 import { Vaccination } from './vaccination.entity';
 import { VaccinationCreateDto } from '../../dto/vaccination-create.dto';
 import { Pet } from '../pet/pet.entity';
@@ -29,7 +30,11 @@ export class VaccinationDbService {
     return this.vaccinationRepository.find({ where: { pet: { id: petId } }, order: { vaccinationDate: 'DESC' } });
   }
 
-  async remove(id: string): Promise<void> {
-    await this.vaccinationRepository.delete(id);
+  async remove(id: string, petId: string): Promise<void> {
+    const removeResults = await this.vaccinationRepository.delete({ id, pet: { id: petId } });
+
+    if (isEmpty(removeResults.affected)) {
+      throw new NotFoundException('Vaccination entry not found');
+    }
   }
 }

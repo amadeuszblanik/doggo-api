@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { isEmpty } from 'bme-utils';
 import { PetWeight } from './petWeight.entity';
 import { PetWeightAddPayload } from '../../types/pet-weight-add-payload.types';
 import { convertWeight } from '../../utils';
@@ -28,6 +29,10 @@ export class PetWeightDbService {
   }
 
   async remove(id: number, petId: string): Promise<void> {
-    await this.petWeightRepository.delete({ id, pet: { id: petId } });
+    const removeResults = await this.petWeightRepository.delete({ id, pet: { id: petId } });
+
+    if (isEmpty(removeResults.affected)) {
+      throw new NotFoundException('Weight entry not found');
+    }
   }
 }

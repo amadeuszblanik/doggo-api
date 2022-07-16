@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Request, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { JwtPayload } from '../../types/jwt-payload.types';
@@ -12,6 +12,7 @@ import { PetWeightCreateDto } from '../../dto/pet-weight-create.dto';
 import { UserService } from '../../user/user.service';
 import { VaccinationService } from '../../vaccination/vaccination.service';
 import { VaccinationCreateDto } from '../../dto/vaccination-create.dto';
+import { NO_CONTENT_STATUS_CODE } from '../../config/http';
 
 @ApiTags('pets')
 @Controller('pets')
@@ -50,6 +51,7 @@ export class PetController {
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @HttpCode(NO_CONTENT_STATUS_CODE)
   @Delete(':id')
   async deletePet(@Param('id') id: string, @Request() req: { user: JwtPayload }) {
     return this.petService.removePet(id, req.user.userid);
@@ -80,6 +82,7 @@ export class PetController {
   @ApiTags('pets-weight')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @HttpCode(NO_CONTENT_STATUS_CODE)
   @Delete(':id/weight/:weightId')
   async deleteWeightById(@Param('id') petId: string, @Param('weightId') weightId: number) {
     return this.petWeightService.deleteById(weightId, petId);
@@ -103,6 +106,15 @@ export class PetController {
     @Request() req: { user: JwtPayload },
   ) {
     return this.vaccinationService.addNewVaccination(req.user.userid, petId, body);
+  }
+
+  @ApiTags('pets-vaccine')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @HttpCode(NO_CONTENT_STATUS_CODE)
+  @Delete(':id/vaccine/:vaccineId')
+  async deleteVaccineById(@Param('id') petId: string, @Param('vaccineId') vaccineId: string) {
+    return this.vaccinationService.removeById(vaccineId, petId);
   }
 
   @UseGuards(JwtAuthGuard)

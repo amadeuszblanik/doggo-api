@@ -60,6 +60,7 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @HttpCode(NO_CONTENT_STATUS_CODE)
   @Delete('deactivate-user')
   @ApiBadRequestResponse({ description: 'Something went wrong. Try again!' })
   deleteDeactivateUser(@Request() req: { user: JwtPayload }) {

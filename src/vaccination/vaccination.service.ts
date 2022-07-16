@@ -20,4 +20,8 @@ export class VaccinationService {
   async findByPetId(petId: string) {
     return await this.vaccinationDbService.findByPetId(petId);
   }
+
+  async removeById(vaccineId: string, petId: string) {
+    return await this.vaccinationDbService.remove(vaccineId, petId);
+  }
 }
