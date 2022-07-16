@@ -27,7 +27,7 @@ export class PetWeightDbService {
     return this.petWeightRepository.find({ where: { pet: { id: petId } }, order: { date: 'DESC' } });
   }
 
-  async remove(id: number): Promise<void> {
-    await this.petWeightRepository.delete(id);
+  async remove(id: number, petId: string): Promise<void> {
+    await this.petWeightRepository.delete({ id, pet: { id: petId } });
   }
 }

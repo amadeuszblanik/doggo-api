@@ -34,4 +34,8 @@ export class PetWeightService {
 
     return petWeights.map((petWeight) => ({ ...petWeight, weight: convertWeight(petWeight.weight, WeightUnits.Gram, unit), unit }));
   }
+
+  deleteById(weightId: number, petId: string) {
+    return this.petWeightDbService.remove(weightId, petId);
+  }
 }

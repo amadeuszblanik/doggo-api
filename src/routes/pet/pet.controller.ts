@@ -77,6 +77,14 @@ export class PetController {
     return this.petWeightService.createNew(id, body, req.user.userid);
   }
 
+  @ApiTags('pets-weight')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Delete(':id/weight/:weightId')
+  async deleteWeightById(@Param('id') petId: string, @Param('weightId') weightId: number) {
+    return this.petWeightService.deleteById(weightId, petId);
+  }
+
   @ApiTags('pets-vaccine')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
