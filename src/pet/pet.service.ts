@@ -9,19 +9,29 @@ import { PetInviteDto } from '../dto/pet-invite.dto';
 import { UsersDbService } from '../data/user/users.service';
 import { convertWeight } from '../utils';
 import { WeightUnits } from '../types/weight-units.types';
+import { BreedDbService } from '../data/breed/breed.service';
 
 @Injectable()
 export class PetService {
-  constructor(private userDbService: UsersDbService, private petDbService: PetDbService, private petUsersDbService: PetUsersDbService) {}
+  constructor(
+    private userDbService: UsersDbService,
+    private petDbService: PetDbService,
+    private petUsersDbService: PetUsersDbService,
+    private breedDbService: BreedDbService,
+  ) {}
 
   async createNew(payload: PetCreateDto, userInfo: JwtPayload): Promise<Pet> {
     const user = await this.userDbService.findById(userInfo.userid);
-    const pet = await this.petDbService.add(payload);
+    const breed = await this.breedDbService.findById(payload.breed);
+    const pet = await this.petDbService.add(payload, breed);
+
     await this.petUsersDbService.add({
       user,
       pet,
       role: PetsRoles.Owner,
     });
+
+    // await this.petBreedDbService.add(pet, breed);
 
     return pet;
   }

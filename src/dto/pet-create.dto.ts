@@ -17,10 +17,10 @@ export class PetCreateDto {
   kind: PetKind;
 
   @ApiProperty({
-    description: 'Pet breed',
-    example: 'Standard Schnauzer',
+    description: 'Pet breed ID',
+    example: 182,
   })
-  breed: string;
+  breed: number;
 
   @ApiProperty({
     description: 'Microchip number',

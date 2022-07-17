@@ -1,8 +1,9 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { PetKind } from '../../types/pet-kind.types';
 import { PetUsers } from '../petUsers/petUsers.entity';
 import { PetWeight } from '../petWeight/petWeight.entity';
+import { Breed } from '../breed/breed.entity';
 
 @Entity()
 export class Pet extends BaseEntity {
@@ -19,8 +20,8 @@ export class Pet extends BaseEntity {
   })
   kind: string;
 
-  @Column()
-  breed: string;
+  @ManyToOne(() => Breed, (breed) => breed.id)
+  breed: Breed;
 
   @Column({ default: '' })
   microchip: string;
