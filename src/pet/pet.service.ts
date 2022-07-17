@@ -23,15 +23,13 @@ export class PetService {
   async createNew(payload: PetCreateDto, userInfo: JwtPayload): Promise<Pet> {
     const user = await this.userDbService.findById(userInfo.userid);
     const breed = await this.breedDbService.findById(payload.breed);
-    const pet = await this.petDbService.add(payload, breed);
+    const pet = await this.petDbService.add(payload, breed, userInfo.userid);
 
     await this.petUsersDbService.add({
       user,
       pet,
       role: PetsRoles.Owner,
     });
-
-    // await this.petBreedDbService.add(pet, breed);
 
     return pet;
   }

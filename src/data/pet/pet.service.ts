@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ConfigService } from '@nestjs/config';
 import { Pet } from './pet.entity';
 import { PetCreateDto } from '../../dto/pet-create.dto';
 import { Breed } from '../breed/breed.entity';
@@ -10,9 +11,17 @@ export class PetDbService {
   constructor(
     @InjectRepository(Pet)
     private petRepository: Repository<Pet>,
+    private readonly configService: ConfigService,
   ) {}
 
-  async add(payload: PetCreateDto, breed: Breed): Promise<Pet> {
+  async add(payload: PetCreateDto, breed: Breed, userId: string): Promise<Pet> {
+    const petsOfUser = await this.findByUserId(userId);
+    const petsLimitPerUser = Number(this.configService.get('PETS_LIMIT_PER_USER'));
+
+    if (petsOfUser.length >= petsLimitPerUser) {
+      throw new ForbiddenException(`You can only have ${String(petsLimitPerUser)} pets assigned to your account`);
+    }
+
     const pet = new Pet();
 
     pet.name = payload.name;
