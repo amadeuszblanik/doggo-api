@@ -13,6 +13,7 @@ import { UserService } from '../../user/user.service';
 import { VaccinationService } from '../../vaccination/vaccination.service';
 import { VaccinationCreateDto } from '../../dto/vaccination-create.dto';
 import { NO_CONTENT_STATUS_CODE } from '../../config/http';
+import { JwtResponse } from '../../types/jwt-response.types';
 
 @ApiTags('pets')
 @Controller('pets')
@@ -78,9 +79,9 @@ export class PetController {
   async postWeightById(
     @Param('id') id: string,
     @Body(SETTINGS.VALIDATION_PIPE) body: PetWeightCreateDto,
-    @Request() req: { user: JwtPayload },
+    @Request() req: { user: JwtResponse },
   ) {
-    return this.petWeightService.createNew(id, body, req.user.userid);
+    return this.petWeightService.createNew(id, body, req.user.weightUnit, req.user.userid);
   }
 
   @ApiTags('pets-weight')

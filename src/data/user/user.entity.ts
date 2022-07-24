@@ -35,7 +35,7 @@ export class User extends BaseEntity {
     enum: WeightUnits,
     default: WeightUnits.Kilogram,
   })
-  weightUnit: string;
+  weightUnit: WeightUnits;
 
   @OneToMany(() => PetUsers, (petUsers) => petUsers.user)
   petUsers: PetUsers[];

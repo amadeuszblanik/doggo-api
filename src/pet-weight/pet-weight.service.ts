@@ -10,7 +10,7 @@ import { convertWeight } from '../utils';
 export class PetWeightService {
   constructor(private userDbService: UsersDbService, private petDbService: PetDbService, private petWeightDbService: PetWeightDbService) {}
 
-  async createNew(petId: string, payload: PetWeightCreateDto, userId: string): Promise<boolean> {
+  async createNew(petId: string, payload: PetWeightCreateDto, unit: WeightUnits, userId: string): Promise<boolean> {
     const addedBy = await this.userDbService.findById(userId);
     const pet = await this.petDbService.findById(petId, userId);
 
@@ -22,7 +22,7 @@ export class PetWeightService {
       addedBy,
       pet,
       date: payload.date,
-      unit: payload.unit,
+      unit,
       weight: payload.weight,
     });
 

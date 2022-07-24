@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
-import { WeightUnits } from '../types/weight-units.types';
 
 export class PetWeightCreateDto {
   @ApiProperty({
@@ -9,12 +8,6 @@ export class PetWeightCreateDto {
   })
   @IsNotEmpty()
   weight: number;
-
-  @ApiProperty({
-    description: 'Unit',
-    example: WeightUnits.Kilogram,
-  })
-  unit: WeightUnits;
 
   @ApiProperty({
     description: 'Date',

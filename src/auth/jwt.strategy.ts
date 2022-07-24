@@ -4,6 +4,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { environment } from '../environments/environment';
 import { JwtPayload } from '../types/jwt-payload.types';
 import { UserService } from '../user/user.service';
+import { JwtResponse } from '../types/jwt-response.types';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -15,7 +16,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate({ username, userid }: JwtPayload) {
+  async validate({ username, userid }: JwtPayload): Promise<JwtResponse> {
     const user = await this.userService.getById(userid);
 
     if (!user.isEmailVerified) {
@@ -27,6 +28,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new ForbiddenException('Your account was deactivated. Please contact support.');
     }
 
-    return { username, userid };
+    return { username, userid, weightUnit: user.weightUnit };
   }
 }
