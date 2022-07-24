@@ -70,7 +70,7 @@ export class UserService {
   async getWeightUnitById(id: string): Promise<WeightUnits> {
     const user = await this.getById(id);
 
-    return user.weightUnit as WeightUnits;
+    return user.weightUnit;
   }
 
   getAllUser(): Promise<User[]> {
