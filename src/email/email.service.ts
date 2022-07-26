@@ -9,7 +9,7 @@ export class EmailService {
   constructor(private mailerService: MailerService, private configService: ConfigService) {}
 
   async sendUserConfirmation(user: User, token: string) {
-    const url = `${this.configService.get<string>('DOMAIN')}/api/auth/confirm-email?token=${token}`;
+    const url = `${this.configService.get<string>('CONFIRM_EMAIL_URL')}?token=${token}`;
 
     await this.sendEmail(user.email, 'Confirm your email', 'confirmation', { name: user.firstName, url });
   }
