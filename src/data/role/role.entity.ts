@@ -11,7 +11,7 @@ export class Role extends BaseEntity {
     enum: UserRoles,
     default: UserRoles.User,
   })
-  name: string;
+  name: UserRoles;
 
   @CreateDateColumn()
   createdAt: Date;

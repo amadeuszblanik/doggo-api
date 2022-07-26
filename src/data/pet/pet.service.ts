@@ -89,6 +89,26 @@ export class PetDbService {
     return allPets.filter(({ petUsers }) => petUsers.some(({ user: { id } }) => id === userId)).filter(({ isActive }) => isActive);
   }
 
+  async userLimits(userId: string) {
+    const allPets = await this.petRepository.find({
+      relations: ['petUsers', 'petUsers.user', 'weight', 'breed'],
+      order: {
+        weight: {
+          date: 'DESC',
+        },
+      },
+    });
+    const activePets = allPets
+      .filter(({ petUsers }) => petUsers.some(({ user: { id } }) => id === userId))
+      .filter(({ isActive }) => isActive);
+    const petsLimitPerUser = Number(this.configService.get('PETS_LIMIT_PER_USER'));
+
+    return {
+      activePets: activePets.length,
+      petsLimitPerUser,
+    };
+  }
+
   async remove(id: string): Promise<void> {
     await this.petRepository.delete(id);
   }

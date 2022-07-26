@@ -1,8 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { isEmpty } from 'bme-utils';
 import { Breed } from './breed.entity';
 import { levenshteinDistance } from '../../utils';
+import { BreedCreateDto } from '../../dto/breed-create.dto';
 
 @Injectable()
 export class BreedDbService {
@@ -10,6 +12,29 @@ export class BreedDbService {
     @InjectRepository(Breed)
     private breedRepository: Repository<Breed>,
   ) {}
+
+  async create(breed: BreedCreateDto): Promise<Breed> {
+    return this.breedRepository.save(breed);
+  }
+
+  async createFromCsv(breeds: BreedCreateDto[]): Promise<{ added: string[]; skipped: string[] }> {
+    const added: string[] = [];
+    const skipped: string[] = [];
+
+    for (const breed of breeds) {
+      const existingBreed = await this.checkIfExistsByName(breed.name);
+
+      if (!existingBreed) {
+        await this.breedRepository.save(breed);
+        added.push(breed.name);
+        continue;
+      }
+
+      skipped.push(breed.name);
+    }
+
+    return { added, skipped };
+  }
 
   async findById(id: number): Promise<Breed> {
     const selectedBreed = await this.breedRepository.findOne({ where: { id } });
@@ -19,6 +44,22 @@ export class BreedDbService {
     }
 
     return selectedBreed;
+  }
+
+  async findByName(name: string): Promise<Breed> {
+    const selectedBreed = await this.breedRepository.findOne({ where: { name } });
+
+    if (!selectedBreed) {
+      throw new NotFoundException('Breed not found');
+    }
+
+    return selectedBreed;
+  }
+
+  async checkIfExistsByName(name: string): Promise<boolean> {
+    const selectedBreed = await this.breedRepository.findOne({ where: { name } });
+
+    return Boolean(selectedBreed);
   }
 
   async listAll(): Promise<Breed[]> {
@@ -34,5 +75,11 @@ export class BreedDbService {
 
       return levenshtein ? levenshteinDistance(nameToSearch, keywordToSearch) >= levenshtein : nameToSearch.includes(keywordToSearch);
     });
+  }
+
+  async delete(id: number): Promise<boolean> {
+    const { affected } = await this.breedRepository.delete(id);
+
+    return !isEmpty(affected);
   }
 }

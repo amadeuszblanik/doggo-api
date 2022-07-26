@@ -1,8 +1,19 @@
-import { BaseEntity, BeforeInsert, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  BaseEntity,
+  BeforeInsert,
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { PetUsers } from '../petUsers/petUsers.entity';
 import { WeightUnits } from '../../types/weight-units.types';
 import { hashPassword } from '../../utils';
+import { UserRole } from '../userRole/userRole.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -39,6 +50,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => PetUsers, (petUsers) => petUsers.user)
   petUsers: PetUsers[];
+
+  @ManyToOne(() => UserRole, (userRole) => userRole.role)
+  userRole: UserRole;
 
   @CreateDateColumn()
   createdAt: Date;

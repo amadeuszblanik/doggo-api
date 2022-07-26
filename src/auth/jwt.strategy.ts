@@ -5,6 +5,7 @@ import { environment } from '../environments/environment';
 import { JwtPayload } from '../types/jwt-payload.types';
 import { UserService } from '../user/user.service';
 import { JwtResponse } from '../types/jwt-response.types';
+import { UserRoles } from '../types/user-roles.types';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -18,6 +19,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate({ username, userid }: JwtPayload): Promise<JwtResponse> {
     const user = await this.userService.getById(userid);
+    const role: UserRoles = user.userRole?.role?.name || UserRoles.User;
 
     if (!user.isEmailVerified) {
       throw new ForbiddenException('You need to confirm your email address first. Please check your email inbox.');
@@ -28,6 +30,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new ForbiddenException('Your account was deactivated. Please contact support.');
     }
 
-    return { username, userid, weightUnit: user.weightUnit };
+    if (role === UserRoles.Banned) {
+      throw new ForbiddenException('Your account was banned. Please contact support.');
+    }
+
+    return { username, userid, weightUnit: user.weightUnit, role };
   }
 }

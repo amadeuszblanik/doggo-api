@@ -88,11 +88,11 @@ export class UsersDbService {
   }
 
   findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+    return this.usersRepository.find({ relations: ['userRole', 'userRole.role'] });
   }
 
   async findById(id: string): Promise<User> {
-    const user = await this.usersRepository.findOne({ where: { id } });
+    const user = await this.usersRepository.findOne({ where: { id }, relations: ['userRole', 'userRole.role'] });
 
     if (!user) {
       throw new NotFoundException('User not found');
@@ -102,7 +102,7 @@ export class UsersDbService {
   }
 
   findByEmail(email: string): Promise<User> {
-    return this.usersRepository.findOneBy({ email });
+    return this.usersRepository.findOne({ where: { email }, relations: ['userRole', 'userRole.role'] });
   }
 
   async confirmEmail(email: string): Promise<void> {

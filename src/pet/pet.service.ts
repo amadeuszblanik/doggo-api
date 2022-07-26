@@ -62,6 +62,10 @@ export class PetService {
     }));
   }
 
+  userLimits(userId: string) {
+    return this.petDbService.userLimits(userId);
+  }
+
   async getByPetId(petId: string, unit: WeightUnits, userId: string) {
     const petDetails = await this.petDbService.findById(petId, userId);
 
