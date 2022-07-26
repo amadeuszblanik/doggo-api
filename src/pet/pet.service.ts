@@ -10,6 +10,7 @@ import { UsersDbService } from '../data/user/users.service';
 import { convertWeight } from '../utils';
 import { WeightUnits } from '../types/weight-units.types';
 import { BreedDbService } from '../data/breed/breed.service';
+import { PetUpdateDto } from '../dto/pet-update.dto';
 
 @Injectable()
 export class PetService {
@@ -32,6 +33,12 @@ export class PetService {
     });
 
     return pet;
+  }
+
+  async updatePet(petId: string, payload: PetUpdateDto, userInfo: JwtPayload): Promise<Pet> {
+    const breed = await this.breedDbService.findById(payload.breed);
+
+    return await this.petDbService.update(petId, userInfo.userid, payload, breed);
   }
 
   async removePet(petId: string, userId: string): Promise<Pet> {

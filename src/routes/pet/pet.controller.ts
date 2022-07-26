@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Request, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { JwtPayload } from '../../types/jwt-payload.types';
@@ -14,6 +14,7 @@ import { VaccinationService } from '../../vaccination/vaccination.service';
 import { VaccinationCreateDto } from '../../dto/vaccination-create.dto';
 import { NO_CONTENT_STATUS_CODE } from '../../config/http';
 import { JwtResponse } from '../../types/jwt-response.types';
+import { PetUpdateDto } from '../../dto/pet-update.dto';
 
 @ApiTags('pets')
 @Controller('pets')
@@ -51,6 +52,14 @@ export class PetController {
     const unit = await this.userService.getWeightUnitById(req.user.userid);
 
     return this.petService.getByPetId(id, unit, req.user.userid);
+  }
+
+  @ApiTags('pets-management')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Put(':id')
+  async putPetDetails(@Param('id') id: string, @Request() req: { user: JwtPayload }, @Body(SETTINGS.VALIDATION_PIPE) body: PetUpdateDto) {
+    return this.petService.updatePet(id, body, req.user);
   }
 
   @ApiTags('pets-management')

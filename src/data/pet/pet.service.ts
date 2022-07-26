@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { Pet } from './pet.entity';
 import { PetCreateDto } from '../../dto/pet-create.dto';
 import { Breed } from '../breed/breed.entity';
+import { PetUpdateDto } from '../../dto/pet-update.dto';
 
 @Injectable()
 export class PetDbService {
@@ -35,6 +36,32 @@ export class PetDbService {
 
   findAll(): Promise<Pet[]> {
     return this.petRepository.find({ relations: ['petUsers', 'petUsers.user', 'breed'] });
+  }
+
+  async update(id: string, userId: string, payload: PetUpdateDto, breed?: Breed): Promise<Pet> {
+    const pet = await this.findById(id, userId);
+
+    if (payload.name) {
+      pet.name = payload.name;
+    }
+
+    if (payload.kind) {
+      pet.kind = payload.kind;
+    }
+
+    if (payload.microchip) {
+      pet.microchip = payload.microchip;
+    }
+
+    if (payload.birthDate) {
+      pet.birthDate = payload.birthDate;
+    }
+
+    if (breed) {
+      pet.breed = breed;
+    }
+
+    return pet.save();
   }
 
   findById(id: string, userId: string): Promise<Pet> {
