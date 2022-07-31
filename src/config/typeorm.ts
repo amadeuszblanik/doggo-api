@@ -9,6 +9,7 @@ import { Breed } from '../data/breed/breed.entity';
 import { UserRole } from '../data/userRole/userRole.entity';
 import { Role } from '../data/role/role.entity';
 import { PetBreed } from '../data/petBreed/petBreed.entity';
+import { Med } from '../data/med/med.entity';
 
 export const typeOrmConfig: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],
@@ -19,7 +20,7 @@ export const typeOrmConfig: TypeOrmModuleAsyncOptions = {
     username: configService.get<string>('DATABASE_USER'),
     password: configService.get<string>('DATABASE_PASS'),
     database: configService.get<string>('DATABASE_NAME'),
-    entities: [Breed, User, Pet, PetBreed, PetUsers, PetWeight, Vaccination, UserRole, Role],
+    entities: [Breed, User, Pet, PetBreed, PetUsers, PetWeight, Vaccination, UserRole, Role, Med],
     synchronize: true,
   }),
   inject: [ConfigService],

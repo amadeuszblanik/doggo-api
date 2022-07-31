@@ -10,9 +10,10 @@ import { PetWeightModule } from '../pet-weight/pet-weight.module';
 import { VaccinationModule } from '../vaccination/vaccination.module';
 import { BreedDbModule } from '../data/breed/breed.module';
 import { RoleDbModule } from '../data/role/role.module';
+import { MedModule } from '../med/med.module';
 
 @Module({
-  imports: [UserModule, PetModule, PetWeightModule, AuthModule, VaccinationModule, BreedDbModule, RoleDbModule],
+  imports: [UserModule, PetModule, PetWeightModule, AuthModule, VaccinationModule, BreedDbModule, RoleDbModule, MedModule],
   controllers: [AuthController, PetController, ConfigController, SuperuserController],
 })
 export class RoutesModule {}

@@ -15,6 +15,8 @@ import { VaccinationCreateDto } from '../../dto/vaccination-create.dto';
 import { NO_CONTENT_STATUS_CODE } from '../../config/http';
 import { JwtResponse } from '../../types/jwt-response.types';
 import { PetUpdateDto } from '../../dto/pet-update.dto';
+import { MedService } from '../../med/med.service';
+import { MedCreateDto } from '../../dto/med-create.dto';
 
 @ApiTags('pets')
 @Controller('pets')
@@ -24,6 +26,7 @@ export class PetController {
     private userService: UserService,
     private petWeightService: PetWeightService,
     private vaccinationService: VaccinationService,
+    private medService: MedService,
   ) {}
 
   @ApiTags('pets-management')
@@ -119,7 +122,7 @@ export class PetController {
     @Body(SETTINGS.VALIDATION_PIPE) body: VaccinationCreateDto,
     @Request() req: { user: JwtPayload },
   ) {
-    return this.vaccinationService.addNewVaccination(req.user.userid, petId, body);
+    return this.vaccinationService.add(req.user.userid, petId, body);
   }
 
   @ApiTags('pets-vaccination')
@@ -129,6 +132,31 @@ export class PetController {
   @Delete(':id/vaccine/:vaccineId')
   async deleteVaccineById(@Param('id') petId: string, @Param('vaccineId') vaccineId: string) {
     return this.vaccinationService.removeById(vaccineId, petId);
+  }
+
+  @ApiTags('pets-med')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Get(':id/med')
+  async getMedById(@Param('id') id: string) {
+    return this.medService.findByPetId(id);
+  }
+
+  @ApiTags('pets-med')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Post(':id/med')
+  async postMedById(@Param('id') petId: string, @Body(SETTINGS.VALIDATION_PIPE) body: MedCreateDto, @Request() req: { user: JwtPayload }) {
+    return this.medService.add(req.user.userid, petId, body);
+  }
+
+  @ApiTags('pets-med')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @HttpCode(NO_CONTENT_STATUS_CODE)
+  @Delete(':id/med/:medId')
+  async deleteMedById(@Param('id') petId: string, @Param('medId') medId: string) {
+    return this.medService.removeById(medId, petId);
   }
 
   @UseGuards(JwtAuthGuard)

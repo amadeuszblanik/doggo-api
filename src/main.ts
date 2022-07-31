@@ -33,6 +33,7 @@ const bootstrap = async () => {
     .addTag('pets-management', 'Pet: Management')
     .addTag('pets-weight', 'Pet: Weight')
     .addTag('pets-vaccination', 'Pet: Vaccination')
+    .addTag('pets-med', 'Pet: Med')
     .addTag('superuser', 'SuperUser: Administration')
     .addBearerAuth()
     .build();

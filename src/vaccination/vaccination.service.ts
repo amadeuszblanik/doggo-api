@@ -7,7 +7,7 @@ import { VaccinationCreateDto } from '../dto/vaccination-create.dto';
 export class VaccinationService {
   constructor(private petDbService: PetDbService, private vaccinationDbService: VaccinationDbService) {}
 
-  async addNewVaccination(userId: string, petId: string, payload: VaccinationCreateDto) {
+  async add(userId: string, petId: string, payload: VaccinationCreateDto) {
     const pet = await this.petDbService.findById(petId, userId);
 
     if (!pet) {
