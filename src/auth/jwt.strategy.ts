@@ -1,23 +1,25 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { environment } from '../environments/environment';
-import { JwtPayload } from '../types/jwt-payload.types';
+import { ConfigService } from '@nestjs/config';
 import { UserService } from '../user/user.service';
 import { JwtResponse } from '../types/jwt-response.types';
 import { UserRoles } from '../types/user-roles.types';
+import { JwtData } from '../types/jwt-data.types';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: environment.jwt.secret,
+      secretOrKey: String(configService.get('JWT_USER_AUTHENTICATION_TOKEN_SECRET')),
     });
   }
 
-  async validate({ username, userid }: JwtPayload): Promise<JwtResponse> {
+  async validate(jwtToken: JwtData): Promise<JwtResponse> {
+    const { username, userid } = jwtToken;
+
     const user = await this.userService.getById(userid);
     const role: UserRoles = user.userRole?.role?.name || UserRoles.User;
 

@@ -38,8 +38,8 @@ export class AuthController {
     type: User,
   })
   @ApiBadRequestResponse({ description: 'User cannot login. Try again!' })
-  signIn(@Request() request: { user: User }, @Body(SETTINGS.VALIDATION_PIPE) _body: AuthSignInDto): SignInResponse {
-    return this.authService.login(request.user);
+  signIn(@Request() request: { user: User }, @Body(SETTINGS.VALIDATION_PIPE) body: AuthSignInDto): SignInResponse {
+    return this.authService.login(request.user, body.keepSignIn);
   }
 
   @UseGuards(JwtAuthGuard)

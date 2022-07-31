@@ -20,4 +20,10 @@ export class AuthSignInDto {
   @Length(PASSWORD_MIN_CHARS, PASSWORD_MAX_CHARS)
   @Matches(REGEX.PASSWORD_RULE, { message: MESSAGES.PASSWORD_RULE_MESSAGE })
   password: string;
+
+  @ApiProperty({
+    description: 'Extend time of single session',
+    default: false,
+  })
+  keepSignIn: boolean;
 }
