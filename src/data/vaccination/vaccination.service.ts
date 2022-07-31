@@ -17,8 +17,8 @@ export class VaccinationDbService {
     const vaccination = new Vaccination();
 
     vaccination.name = payload.name;
-    vaccination.description = payload.description;
-    vaccination.reminders = payload.reminders;
+    vaccination.description = payload.description || '';
+    vaccination.reminders = payload.reminders || false;
     vaccination.vaccinationDate = payload.vaccinationDate;
     vaccination.validDate = payload.validDate;
     vaccination.pet = pet;

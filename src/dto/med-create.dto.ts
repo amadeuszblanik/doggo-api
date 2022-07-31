@@ -26,13 +26,11 @@ export class MedCreateDto {
     description: 'Some description',
     example: 'Protection against ticks',
   })
-  @IsNotEmpty()
   description: string;
 
   @ApiProperty({
     description: 'Send push notification (Planned feature)',
     example: true,
   })
-  @IsNotEmpty()
   reminders: boolean;
 }

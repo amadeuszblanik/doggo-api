@@ -17,8 +17,8 @@ export class MedDbService {
     const med = new Med();
 
     med.name = payload.name;
-    med.description = payload.description;
-    med.reminders = payload.reminders;
+    med.description = payload.description || '';
+    med.reminders = payload.reminders || false;
     med.takenDate = payload.takenDate;
     med.validDate = payload.validDate;
     med.pet = pet;

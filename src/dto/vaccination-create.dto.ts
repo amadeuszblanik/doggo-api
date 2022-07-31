@@ -26,13 +26,11 @@ export class VaccinationCreateDto {
     description: 'Some description',
     example: 'Rabies',
   })
-  @IsNotEmpty()
   description: string;
 
   @ApiProperty({
     description: 'Send push notification (Planned feature)',
     example: true,
   })
-  @IsNotEmpty()
   reminders: boolean;
 }
